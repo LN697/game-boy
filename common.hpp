@@ -7,3 +7,5 @@
 #include <memory>
 #include <fstream>
 #include <iterator>
+
+#include <SDL2/SDL.h>
