@@ -2,7 +2,7 @@
 
 using namespace DEBUG;
 
-Emulator::Emulator() : state(STOPPED) {
+Emulator::Emulator(Model model) : state(STOPPED), model(model) {
     memory = nullptr;
     DEBUG_INFO("Emulator initialized.");
 }
@@ -44,6 +44,15 @@ bool Emulator::LoadROM(const std::string& filename) {
 
 void Emulator::InitEmulator() {
     state = RUNNING;
+    ticks = 0;
+    
+    // Allocate memory for the emulator
+    memory = std::make_unique<uint8_t[]>(0xFFFF); // 64KiB of addressable memory
+    // Initialize memory model vram, wram, etc.
+    
+    InitDisplay();
+
+    DEBUG_INFO("Emulator initialized.");
 }
 
 void Emulator::StopEmulator() {
@@ -59,3 +68,23 @@ void Emulator::StepCPU() {
         // Execute one CPU cycle
     }
 }
+
+State Emulator::GetState() const {
+    switch (state) {
+        case STOPPED:
+            DEBUG_INFO("Emulator state: STOPPED");
+            break;
+        case RUNNING:
+            DEBUG_INFO("Emulator state: RUNNING");
+            break;
+        case PAUSED:
+            DEBUG_INFO("Emulator state: PAUSED");
+            break;
+    }
+
+    return state;
+}
+
+
+
+
