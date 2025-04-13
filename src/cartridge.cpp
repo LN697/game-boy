@@ -1,16 +1,6 @@
 #include "cartridge.hpp"
 
-Cartridge::~Cartridge() {
-    if (rom) {
-        delete[] rom;
-        DEBUG_INFO("Cartridge memory released.");
-    }
-    else {
-        DEBUG_WARN("Cartridge memory was not allocated.");
-    }
-}
-
-Cartridge::Cartridge(const u8& rom) : rom(nullptr) {
+Cartridge::Cartridge() {
     for (int i = 0; i < 4; ++i) {
         entrypoint[i] = 0x00;
     }
@@ -30,6 +20,18 @@ Cartridge::Cartridge(const u8& rom) : rom(nullptr) {
     romVersion = 0x00;
     headerChecksum = 0x00;
     globalChecksum = 0x00;
+
+    DEBUG_INFO("Cartridge initialized.");
+}
+
+Cartridge::~Cartridge() {
+    if (rom) {
+        delete[] rom;
+        DEBUG_INFO("Cartridge memory released.");
+    }
+    else {
+        DEBUG_WARN("Cartridge memory was not allocated.");
+    }
 }
 
 bool Cartridge::LoadROM(const std::string& filename) {

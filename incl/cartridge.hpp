@@ -22,7 +22,7 @@ class Cartridge {
         u8* rom;
 
     public:
-        Cartridge(const u8& rom);
+        Cartridge();
         ~Cartridge();
         bool LoadROM(const std::string& filename);
         void InitCartridge();

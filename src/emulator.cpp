@@ -7,6 +7,7 @@ Emulator::Emulator(Model model) : state(STOPPED), model(model) {
 
 Emulator::~Emulator() {
     if (memory) {
+        delete[] memory;
         DEBUG_INFO("Emulator memory released.");
     }
     else {

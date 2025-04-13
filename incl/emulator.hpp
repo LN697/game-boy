@@ -25,14 +25,14 @@ class Emulator {
         State state;
         Model model;
 
-        u8* memory;  // Main memory - 32KiB (up to 8MiB for CGB) 16-bit address space
+        u8* memory;                     // Main memory - 32KiB (up to 8MiB for CGB) 16-bit address space
 
-        u8* wram;    // Work RAM - 8KiB (32KiB for CGB)
-        u8* vram;    // Video RAM - 8KiB (16KiB for CGB)
+        u8* wram;                       // Work RAM - 8KiB (32KiB for CGB)
+        u8* vram;                       // Video RAM - 8KiB (16KiB for CGB)
         
-        u64 ticks;                     // Number of ticks since the emulator started
+        u64 ticks;                      // Number of ticks since the emulator started
 
-        Cartridge* cartridge; // Pointer to the cartridge object
+        Cartridge cartridge;           // Pointer to the cartridge object
 
 
     public:
@@ -49,4 +49,9 @@ class Emulator {
         u8 ReadByte(u16 address) const;
         State GetState() const;
         void SetState(State newState);
+
+        void LoadCartridge();
 };
+
+
+// TODO: Implement memory management and cartridge loading and initialization
