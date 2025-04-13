@@ -2,12 +2,12 @@ CXX := g++
 OUT := build/main
 
 SRC_DIR := src
-INC_DIR := incl
-SRC := $(SRC_DIR)/main.cpp $(SRC_DIR)/debug.cpp $(SRC_DIR)/emulator.cpp
+INC_DIR := includes
+SRC := $(SRC_DIR)/*.cpp
 
 CXXFLAGS := -std=c++23 -Wall -Wextra -Werror
 CPPFLAGS := -I$(INC_DIR) $(shell sdl2-config --cflags)
-LDFLAGS := $(shell sdl2-config --libs)
+LDFLAGS := $(shell sdl2-config --libs) -lSDL2_ttf
 
 .PHONY: all compile run clean
 

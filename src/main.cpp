@@ -26,6 +26,9 @@ int main(int argc, char* argv[]) {
     emulator.DumpCartridgeHeader();
     emulator.UnloadCartridge();
 
+    // For DEBUGGING only
+    emulator.SetState(State::UNKNOWN);
+
     while (emulator.GetState() != State::STOPPED) {
         if (emulator.GetState() == State::RUNNING) {
             emulator.StepCPU();
