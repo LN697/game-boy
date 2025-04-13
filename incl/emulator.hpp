@@ -3,11 +3,13 @@
 #include "debug.hpp"
 #include "common.hpp"
 #include "display.hpp"
+#include "cartridge.hpp"
 
 enum State {
     STOPPED,
     RUNNING,
-    PAUSED
+    PAUSED,
+    UNKNOWN
 };
 
 enum Model {
@@ -23,18 +25,18 @@ class Emulator {
         State state;
         Model model;
 
-        std::unique_ptr<uint8_t[]> memory;  // Main memory - 32KiB (up to 8MiB for CGB) 16-bit address space
+        u8* memory;  // Main memory - 32KiB (up to 8MiB for CGB) 16-bit address space
 
-        std::unique_ptr<uint8_t[]> wram;    // Work RAM - 8KiB (32KiB for CGB)
-        std::unique_ptr<uint8_t[]> vram;    // Video RAM - 8KiB (16KiB for CGB)
+        u8* wram;    // Work RAM - 8KiB (32KiB for CGB)
+        u8* vram;    // Video RAM - 8KiB (16KiB for CGB)
         
-        uint64_t ticks;                     // Number of ticks since the emulator started
+        u64 ticks;                     // Number of ticks since the emulator started
 
-
+        Cartridge* cartridge; // Pointer to the cartridge object
 
 
     public:
-        Emulator(Model);
+        Emulator(Model model);
         ~Emulator();
 
         bool LoadROM(const std::string& filename);
@@ -42,5 +44,9 @@ class Emulator {
         void StopEmulator();
         void ResetEmulator();
         void StepCPU();
+
+        void WriteByte(u16 address, u8 value);
+        u8 ReadByte(u16 address) const;
         State GetState() const;
+        void SetState(State newState);
 };

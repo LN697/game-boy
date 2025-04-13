@@ -7,6 +7,7 @@ void InitDisplay() {
     DEBUG_INFO("TTF initialized.");
     DEBUG_INFO("Display initialized.");
 }
+
 void UpdateDisplay() {
     DEBUG_INFO("Display updated.");
 }
