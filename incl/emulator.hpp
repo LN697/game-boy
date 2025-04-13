@@ -23,7 +23,7 @@ enum Model {
 class Emulator {
     private:
         State state;
-        Model model;
+        Model model;                    // Emulator model
 
         u8* memory;                     // Main memory - 32KiB (up to 8MiB for CGB) 16-bit address space
 
@@ -32,7 +32,7 @@ class Emulator {
         
         u64 ticks;                      // Number of ticks since the emulator started
 
-        Cartridge cartridge;           // Pointer to the cartridge object
+        Cartridge* cartridge;           // Pointer to the cartridge object
 
 
     public:
@@ -51,6 +51,8 @@ class Emulator {
         void SetState(State newState);
 
         void LoadCartridge();
+        void UnloadCartridge();
+        void DumpCartridgeHeader() const;
 };
 
 

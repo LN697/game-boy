@@ -23,7 +23,10 @@ class Cartridge {
 
     public:
         Cartridge();
+        Cartridge(const u8* romData, size_t size);
         ~Cartridge();
-        bool LoadROM(const std::string& filename);
         void InitCartridge();
+        void DumpHeader() const;
 };
+
+// TODO: Implement cartridge loading and initialization in Emulator class

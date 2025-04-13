@@ -21,7 +21,18 @@ Cartridge::Cartridge() {
     headerChecksum = 0x00;
     globalChecksum = 0x00;
 
-    DEBUG_INFO("Cartridge initialized.");
+    DEBUG_INFO("Cartridge initialized: default constructor.");
+}
+
+Cartridge::Cartridge(const u8* romData, size_t size) {
+    rom = new u8[size];
+    if (rom) {
+        std::copy(romData, romData + size, rom);
+        DEBUG_INFO("Cartridge memory allocated and initialized.");
+    }
+    else {
+        DEBUG_ERROR("Failed to allocate memory for cartridge.");
+    }
 }
 
 Cartridge::~Cartridge() {
@@ -32,37 +43,6 @@ Cartridge::~Cartridge() {
     else {
         DEBUG_WARN("Cartridge memory was not allocated.");
     }
-}
-
-bool Cartridge::LoadROM(const std::string& filename) {
-    std::ifstream romFile(filename, std::ios::binary | std::ios::ate);
-    if (!romFile.is_open()) {
-        DEBUG_ERROR("Failed to open ROM file: " + filename);
-
-        return false;
-    }
-
-    std::streamsize romSize = romFile.tellg();
-    romFile.seekg(0, std::ios::beg);
-
-    if (romSize <= 0) {
-        DEBUG_ERROR("ROM file is empty or invalid: " + filename);
-
-        return false;
-    }
-
-    rom = new u8[romSize];
-    
-    if (!romFile.read(reinterpret_cast<char*>(rom), romSize)) {
-        DEBUG_ERROR("Failed to read ROM file: " + filename);
-        delete[] rom;
-        rom = nullptr;
-
-        return false;
-    }
-    DEBUG_INFO("Loaded ROM: " + filename + " (" + std::to_string(romSize) + " bytes)");
-
-    return true;
 }
 
 void Cartridge::InitCartridge() {
@@ -87,4 +67,21 @@ void Cartridge::InitCartridge() {
     globalChecksum = (rom[0x014E] << 8) | rom[0x014F];
 
     DEBUG_INFO("Cartridge initialized.");
+}
+
+void Cartridge::DumpHeader() const {
+    DEBUG_INFO("Cartridge Header:");
+    DEBUG_INFO("Entry Point: " + std::to_string(entrypoint[0]) + " " + std::to_string(entrypoint[1]) + " " + std::to_string(entrypoint[2]) + " " + std::to_string(entrypoint[3]));
+    DEBUG_INFO("Logo: " + std::to_string(logo[0]) + " " + std::to_string(logo[1]) + " ...");
+    DEBUG_INFO("Title: " + std::string(title, 16));
+    DEBUG_INFO("New Licensee Code: " + std::to_string(newLicenseeCode));
+    DEBUG_INFO("SGB Flag: " + std::to_string(sgbFlag));
+    DEBUG_INFO("Cartridge Type: " + std::to_string(cartridgeType));
+    DEBUG_INFO("ROM Size: " + std::to_string(romSize));
+    DEBUG_INFO("RAM Size: " + std::to_string(ramSize));
+    DEBUG_INFO("Destination Code: " + std::to_string(destinationCode));
+    DEBUG_INFO("Old Licensee Code: " + std::to_string(oldLicenseeCode));
+    DEBUG_INFO("ROM Version: " + std::to_string(romVersion));
+    DEBUG_INFO("Header Checksum: " + std::to_string(headerChecksum));
+    DEBUG_INFO("Global Checksum: " + std::to_string(globalChecksum));
 }

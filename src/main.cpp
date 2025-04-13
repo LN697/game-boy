@@ -22,6 +22,10 @@ int main(int argc, char* argv[]) {
 
     InitDisplay();
 
+    emulator.LoadCartridge();
+    emulator.DumpCartridgeHeader();
+    emulator.UnloadCartridge();
+
     while (emulator.GetState() != State::STOPPED) {
         if (emulator.GetState() == State::RUNNING) {
             emulator.StepCPU();

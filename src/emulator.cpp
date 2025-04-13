@@ -13,7 +13,18 @@ Emulator::~Emulator() {
     else {
         DEBUG_WARN("Emulator memory was not allocated.");
     }
+    if (cartridge) {
+        delete cartridge;
+        DEBUG_INFO("Cartridge memory released.");
+    }
+    else {
+        DEBUG_WARN("Cartridge memory was not allocated.");
+    }
 }
+
+
+
+
 
 bool Emulator::LoadROM(const std::string& filename) {
     std::ifstream romFile(filename, std::ios::binary | std::ios::ate);
@@ -74,7 +85,10 @@ void Emulator::StepCPU() {
     }
 }
 
-// Getter functions
+
+
+
+
 
 u8 Emulator::ReadByte(u16 address) const {
     return memory[address];
@@ -83,19 +97,19 @@ u8 Emulator::ReadByte(u16 address) const {
 State Emulator::GetState() const {
     switch (state) {
         case STOPPED:
-
             DEBUG_INFO("Emulator state: STOPPED");
-
             break;
         case RUNNING:
-
             DEBUG_INFO("Emulator state: RUNNING");
-
             break;
         case PAUSED:
-
             DEBUG_INFO("Emulator state: PAUSED");
-
+            break;
+        case UNKNOWN:
+            DEBUG_INFO("Emulator state: UNKNOWN");
+            break;
+        default:
+            DEBUG_ERROR("Invalid state encountered: " + std::to_string(state));
             break;
     }
 
@@ -104,7 +118,8 @@ State Emulator::GetState() const {
 
 
 
-// Setter functions
+
+
 
 void Emulator::WriteByte(u16 address, u8 value) {
     if (address < 0xFFFF) {
@@ -122,3 +137,40 @@ void Emulator::SetState(State newState) {
     DEBUG_INFO("Emulator state changed to: " + std::to_string(state));
 }
 
+
+
+
+
+
+void Emulator::LoadCartridge() {
+    cartridge = new Cartridge(memory, sizeof(memory));
+    if (!cartridge) {
+        DEBUG_ERROR("Failed to load cartridge.");
+        state = UNKNOWN;
+        DEBUG_INFO("Emulator state changed to: UNKNOWN");
+        return;
+    }
+    DEBUG_INFO("Cartridge loaded successfully.");
+    cartridge->InitCartridge();
+    DEBUG_INFO("Cartridge initialized.");
+}
+
+void Emulator::UnloadCartridge() {
+    if (cartridge) {
+        delete cartridge;
+        cartridge = nullptr;
+        DEBUG_INFO("Cartridge unloaded successfully.");
+    }
+    else {
+        DEBUG_WARN("No cartridge to unload.");
+    }
+}
+
+void Emulator::DumpCartridgeHeader() const {
+    if (cartridge) {
+        cartridge->DumpHeader();
+    }
+    else {
+        DEBUG_WARN("No cartridge loaded.");
+    }
+}
